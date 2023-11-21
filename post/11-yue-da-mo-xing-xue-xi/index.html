@@ -1,0 +1,208 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>11月大模型学习 | XiangYang</title>
+<link rel="shortcut icon" href="https://youxiangyang.github.io/mypages.github.io/favicon.ico?v=1700576913949">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://youxiangyang.github.io/mypages.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="11月大模型学习 | XiangYang - Atom Feed" href="https://youxiangyang.github.io/mypages.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="11月大模型学习计划.
+
+最近同事邀请利用空余的时间,去做一个项目.内容是和大模型相关的. 比较巧合的是,单位的一些客户对这个也很感兴趣. 于是就答应了 . 不过,刚刚开始接触的我,其实是很迷茫的. 与传统的编程相比，大模型的方式，让人感觉..." />
+    <meta name="keywords" content="大模型,python" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://youxiangyang.github.io/mypages.github.io">
+  <img class="avatar" src="https://youxiangyang.github.io/mypages.github.io/images/avatar.png?v=1700576913949" alt="">
+  </a>
+  <h1 class="site-title">
+    XiangYang
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="https://youxiangyang.github.io/mypages.github.io" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://youxiangyang.github.io/mypages.github.io/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://youxiangyang.github.io/mypages.github.io/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://youxiangyang.github.io/mypages.github.io/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              11月大模型学习
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-11-21
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+                <a href="https://youxiangyang.github.io/mypages.github.io/tag/LLM/" class="post-tag">
+                  # 大模型
+                </a>
+              
+                <a href="https://youxiangyang.github.io/mypages.github.io/tag/python/" class="post-tag">
+                  # python
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <p>11月大模型学习计划.</p>
+<!-- more -->
+<p>最近同事邀请利用空余的时间,去做一个项目.内容是和大模型相关的. 比较巧合的是,单位的一些客户对这个也很感兴趣. 于是就答应了 . 不过,刚刚开始接触的我,其实是很迷茫的. 与传统的编程相比，大模型的方式，让人感觉不再是传统的写代码了。也许”提示词“工程，未来真的会改变一些工作。<br>
+不过，这样的方式也很让人迷糊。 大模型的核心，其实并不在你手里，你只是一个调用接口的人，它只是比低代码平台高级和智能里许多倍。但是不知道为什么，程序员可能对于低代码，是有一些敌意的。而且对于大模型，我感觉一样也让人感到不安。程序员到底应该是什么样的？我们的未来，是否依然需要”写代码“。我们的未来，是否终究被困于”业务“？</p>
+<p><strong>大模型的一些术语:</strong></p>
+<ol>
+<li>
+<p>大模型：一般指1亿以上参数的模型，但是这个标准一直在升级，目前万亿参数以上的模型也有了。大语言模型（Large Language Model，LLM）是针对语言的大模型。</p>
+</li>
+<li>
+<p>175B、60B、540B等：这些一般指参数的个数，B是Billion/十亿的意思，175B是1750亿参数，这是ChatGPT大约的参数规模。</p>
+</li>
+<li>
+<p>强化学习：（Reinforcement Learning）一种机器学习的方法，通过从外部获得激励来校正学习方向从而获得一种自适应的学习能力。</p>
+</li>
+<li>
+<p>基于人工反馈的强化学习（RLHF）：（Reinforcement Learning from Human Feedback）构建人类反馈数据集，训练一个激励模型，模仿人类偏好对结果打分，这是GPT-3后时代大语言模型越来越像人类对话核心技术。</p>
+</li>
+<li>
+<p>涌现：（Emergence）或称创发、突现、呈展、演生，是一种现象。许多小实体相互作用后产生了大实体，而这个大实体展现了组成它的小实体所不具有的特性。研究发现，模型规模达到一定阈值以上后，会在多步算术、大学考试、单词释义等场景的准确性显著提升，称为涌现。</p>
+</li>
+<li>
+<p>泛化：（Generalization）模型泛化是指一些模型可以应用（泛化）到其他场景，通常为采用迁移学习、微调等手段实现泛化。</p>
+</li>
+<li>
+<p>微调：（FineTuning）针对大量数据训练出来的预训练模型，后期采用业务相关数据进一步训练原先模型的相关部分，得到准确度更高的模型，或者更好的泛化。</p>
+</li>
+<li>
+<p>指令微调：（Instruction FineTuning），针对已经存在的预训练模型，给出额外的指令或者标注数据集来提升模型的性能。</p>
+</li>
+<li>
+<p>思维链：（Chain-of-Thought，CoT）。通过让大语言模型（LLM）将一个问题拆解为多个步骤，一步一步分析，逐步得出正确答案。需指出，针对复杂问题，LLM直接给出错误答案的概率比较高。思维链可以看成是一种指令微调。</p>
+</li>
+</ol>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://youxiangyang.github.io/mypages.github.io/post/hello-gridea/">
+              <h3 class="post-title">
+                Hello World
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by XiangYang
+  <a class="rss" href="https://youxiangyang.github.io/mypages.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

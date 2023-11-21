@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://youxiangyang.github.io/mypages.github.io</id>
+    <title>XiangYang</title>
+    <updated>2023-11-21T14:29:37.377Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://youxiangyang.github.io/mypages.github.io"/>
+    <link rel="self" href="https://youxiangyang.github.io/mypages.github.io/atom.xml"/>
+    <subtitle>温故而知新</subtitle>
+    <logo>https://youxiangyang.github.io/mypages.github.io/images/avatar.png</logo>
+    <icon>https://youxiangyang.github.io/mypages.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2023, XiangYang</rights>
+    <entry>
+        <title type="html"><![CDATA[langchain框架学习-1]]></title>
+        <id>https://youxiangyang.github.io/mypages.github.io/post/langchain-kuang-jia-xue-xi/</id>
+        <link href="https://youxiangyang.github.io/mypages.github.io/post/langchain-kuang-jia-xue-xi/">
+        </link>
+        <updated>2023-11-21T13:22:22.000Z</updated>
+        <summary type="html"><![CDATA[<p>LangChain 是一个开发由语言模型驱动的应用程序的框架。我们相信最强大和不同的应用程序不仅会通过 API 调用语言模型， 还会：数据感知 : 将语言模型连接到其他数据源；具有代理性质 : 允许语言模型与其环境交互。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>LangChain 是一个开发由语言模型驱动的应用程序的框架。我们相信最强大和不同的应用程序不仅会通过 API 调用语言模型， 还会：数据感知 : 将语言模型连接到其他数据源；具有代理性质 : 允许语言模型与其环境交互。</p>
+<!-- more -->
+<h2 id="介绍">介绍</h2>
+<p>LangChain是一个用于开发由语言模型驱动的应用程序的框架。<br>
+它使应用程序能够：</p>
+<ul>
+<li>上下文感知：将语言模型连接到上下文源（提示指令、少量镜头示例、内容以使其响应为基础等）</li>
+<li>Reason：依靠语言模型进行推理（关于如何根据提供的上下文回答、采取什么行动等）</li>
+</ul>
+<p>该框架由几个部分组成。</p>
+<ul>
+<li>LangChain 库：Python 和 JavaScript 库。包含无数组件的接口和集成，将这些组件组合成链和代理的基本运行时，以及链和代理的现成实现。</li>
+<li>LangChain模板：一组易于部署的参考架构，适用于各种任务。</li>
+<li>LangServe：用于将LangChain链部署为REST API的库。</li>
+<li>LangSmith：一个开发者平台，可让您调试、测试、评估和监控基于任何LLM框架构建的链，并与LangChain无缝集成。</li>
+</ul>
+<h2 id="安装">安装</h2>
+<blockquote>
+<p>pip install langchain</p>
+</blockquote>
+<h2 id="quickstart">QuickStart</h2>
+<p>LangChain提供了许多模块，可用于构建语言模型应用程序。 模块可以在简单的应用程序中用作独立模块，并且可以针对更复杂的用例进行组合。 组合由LangChain表达式语言（LCEL）提供支持，它定义了一个统一的接口，许多模块实现了该接口，从而可以无缝地链接组件。</p>
+<p>最简单和最常见的链包含三件事：</p>
+<ul>
+<li>LLM/聊天模型：语言模型是这里的核心推理引擎。为了使用LangChain，您需要了解不同类型的语言模型以及如何使用它们。</li>
+<li>提示模板：这为语言模型提供说明。这控制了语言模型的输出内容，因此了解如何构造提示和不同的提示策略至关重要。</li>
+<li>输出分析器：这些分析器将来自语言模型的原始响应转换为更可行的格式，从而便于在下游使用输出。</li>
+</ul>
+<h3 id="llm聊天模型">LLM/聊天模型</h3>
+<p>有两种类型的语言模型：</p>
+<ul>
+<li>LLM： 底层模型将字符串作为输入并返回字符串</li>
+<li>ChatModel： 基础模型将消息列表作为输入，并返回消息。</li>
+</ul>
+<blockquote>
+<p>可以当做LLM模型直接收字符串,聊天模型只接收消息列表</p>
+</blockquote>
+<p>消息必须具备的两个属性: 内容和实体</p>
+<p>langchain提供的几个对象来区分不同的角色:</p>
+<ul>
+<li>HumanMessage 用户角色</li>
+<li>AIMessage: AI助手</li>
+<li>SystemMessage: 系统</li>
+<li>FunctionMessage,ToolMessage, 使用函数工具返回的输出.</li>
+</ul>
+<p>此外,也可以自定义角色.</p>
+<p><strong>不同类型的模型及对应的输入</strong></p>
+<pre><code class="language-python">from langchain.llms import OpenAI
+from langchain.chat_models import ChatOpenAI
+
+llm = OpenAI() # 需要配置参数进行初始化
+chat_model = ChatOpenAI()
+
+from langchain.schema import HumanMessage
+
+text = &quot;What would be a good company name for a company that makes colorful socks?&quot;
+messages = [HumanMessage(content=text)]
+llm.invoke(text)
+# &gt;&gt; Feetful of Fun
+chat_model.invoke(messages)
+# &gt;&gt; AIMessage(content=&quot;Socks O'Color&quot;)
+</code></pre>
+<h3 id="提示模板">提示模板</h3>
+<p>大多数的LLM应用程序不会将用户输入直接传递到LLM中,通常是将用户输入添加到更大的文本中,该文本提供了有关这个特定任务的其他上下文. (俗称提示词).</p>
+<p>prompttemplate可以将用户的输入转换为格式化的输入，并和预制的逻辑绑定到一起输入。</p>
+<pre><code class="language-python">from langchain.prompts import PromptTemplate
+
+prompt = PromptTemplate.from_template(&quot;What is a good name for a company that makes {product}?&quot;)
+prompt.format(product=&quot;colorful socks&quot;)
+
+#What is a good name for a company that makes colorful socks?
+
+</code></pre>
+<p>应用2</p>
+<pre><code class="language-python">from langchain.prompts.chat import ChatPromptTemplate
+
+template = &quot;You are a helpful assistant that translates {input_language} to {output_language}.&quot;
+human_template = &quot;{text}&quot;
+
+chat_prompt = ChatPromptTemplate.from_messages([
+    (&quot;system&quot;, template),
+    (&quot;human&quot;, human_template),
+])
+
+chat_prompt.format_messages(input_language=&quot;English&quot;, output_language=&quot;French&quot;, text=&quot;I love programming.&quot;)
+
+[
+    SystemMessage(content=&quot;You are a helpful assistant that translates English to French.&quot;, additional_kwargs={}),
+    HumanMessage(content=&quot;I love programming.&quot;)
+]
+</code></pre>
+<p><strong>输出解析器</strong>:<br>
+OutputParsers将语言模型的原始输出转换为可下游使用的格式。 主要有几种类型，包括：</p>
+<ul>
+<li>将文本转换为结构化信息（例如 JSON）LLM</li>
+<li>将 a 转换为字符串ChatMessage</li>
+<li>将调用中返回的额外信息（如 OpenAI 函数调用）转换为字符串。</li>
+</ul>
+<p>自定义的一个Demo：</p>
+<pre><code class="language-python">from langchain.schema import BaseOutputParser
+
+class CommaSeparatedListOutputParser(BaseOutputParser):
+    &quot;&quot;&quot;Parse the output of an LLM call to a comma-separated list.&quot;&quot;&quot;
+
+
+    def parse(self, text: str):
+        &quot;&quot;&quot;Parse the output of an LLM call.&quot;&quot;&quot;
+        return text.strip().split(&quot;, &quot;)
+
+CommaSeparatedListOutputParser().parse(&quot;hi, bye&quot;)
+# &gt;&gt; ['hi', 'bye']
+</code></pre>
+<p><strong>链</strong></p>
+<p>我们可以把这些逻辑组合成一个链，用于完成一个复杂的场景：</p>
+<pre><code class="language-python">from typing import List
+
+from langchain.chat_models import ChatOpenAI
+from langchain.prompts import ChatPromptTemplate
+from langchain.schema import BaseOutputParser
+
+class CommaSeparatedListOutputParser(BaseOutputParser[List[str]]):
+    &quot;&quot;&quot;Parse the output of an LLM call to a comma-separated list.&quot;&quot;&quot;
+
+
+    def parse(self, text: str) -&gt; List[str]:
+        &quot;&quot;&quot;Parse the output of an LLM call.&quot;&quot;&quot;
+        return text.strip().split(&quot;, &quot;)
+
+template = &quot;&quot;&quot;You are a helpful assistant who generates comma separated lists.
+A user will pass in a category, and you should generate 5 objects in that category in a comma separated list.
+ONLY return a comma separated list, and nothing more.&quot;&quot;&quot;
+human_template = &quot;{text}&quot;
+
+chat_prompt = ChatPromptTemplate.from_messages([
+    (&quot;system&quot;, template),
+    (&quot;human&quot;, human_template),
+])
+chain = chat_prompt | ChatOpenAI() | CommaSeparatedListOutputParser()
+chain.invoke({&quot;text&quot;: &quot;colors&quot;})
+# &gt;&gt; ['red', 'blue', 'green', 'yellow', 'orange']
+</code></pre>
+<p>关于将其转换为接口API并应用，这里不再追加。</p>
+<h2 id="安全问题">安全问题</h2>
+<p>在构建此类应用程序时，开发人员应记住遵循良好的安全实践：</p>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Principle_of_least_privilege"><strong>限制</strong></a>权限：根据应用程序的需要专门限定权限范围。授予宽泛或过多的权限可能会引入重大安全漏洞。为避免此类漏洞，请考虑使用只读凭据、禁止访问敏感资源、使用沙盒技术（例如在容器内运行）等，以适合您的应用程序。</li>
+<li><strong>预测潜在的滥用</strong>：正如人类可能会犯错一样，大型语言模型 （LLM） 也会犯错。始终假定任何系统访问或凭据都可以以分配的权限允许的任何方式使用。例如，如果一对数据库凭据允许删除数据，则最安全的假设是任何能够使用这些凭据的 LLM 实际上可能会删除数据。</li>
+<li><a href="https://en.wikipedia.org/wiki/Defense_in_depth_(computing)"><strong>纵深防御</strong></a>：没有任何安全技术是完美的。微调和良好的链设计可以减少但不能消除大型语言模型 （LLM） 出错的几率。最好结合多层安全方法，而不是依赖任何单一的防御层来确保安全性。例如：同时使用只读权限和沙盒来确保 LLM 只能访问明确供它们使用的数据。</li>
+</ul>
+<p>不这样做的风险包括但不限于：</p>
+<ul>
+<li>数据损坏或丢失。</li>
+<li>未经授权访问机密信息。</li>
+<li>关键资源的性能或可用性受到影响。</li>
+</ul>
+<p>具有缓解策略的示例方案：</p>
+<ul>
+<li>用户可以要求有权访问文件系统的代理删除不应删除的文件或读取包含敏感信息的文件的内容。若要缓解，请将代理限制为仅使用特定目录，并且仅允许其读取或写入可安全读取或写入的文件。请考虑通过在容器中运行代理来进一步沙盒化代理。</li>
+<li>用户可以要求对外部 API 具有写入权限的代理将恶意数据写入 API，或从该 API 中删除数据。若要缓解，请为代理提供只读 API 密钥，或将其限制为仅使用已可抵抗此类滥用的终结点。</li>
+<li>用户可以要求有权访问数据库的代理删除表或更改架构。若要缓解，请将凭据范围限定为代理需要访问的表，并考虑颁发只读凭据。</li>
+</ul>
+<p>如果要构建访问外部资源（如文件系统、API）的应用程序 或数据库，请考虑与公司的安全团队交谈，以确定如何最好地 设计和保护您的应用程序。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[11月大模型学习]]></title>
+        <id>https://youxiangyang.github.io/mypages.github.io/post/11-yue-da-mo-xing-xue-xi/</id>
+        <link href="https://youxiangyang.github.io/mypages.github.io/post/11-yue-da-mo-xing-xue-xi/">
+        </link>
+        <updated>2023-11-21T13:08:32.000Z</updated>
+        <summary type="html"><![CDATA[<p>11月大模型学习计划.</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>11月大模型学习计划.</p>
+<!-- more -->
+<p>最近同事邀请利用空余的时间,去做一个项目.内容是和大模型相关的. 比较巧合的是,单位的一些客户对这个也很感兴趣. 于是就答应了 . 不过,刚刚开始接触的我,其实是很迷茫的. 与传统的编程相比，大模型的方式，让人感觉不再是传统的写代码了。也许”提示词“工程，未来真的会改变一些工作。<br>
+不过，这样的方式也很让人迷糊。 大模型的核心，其实并不在你手里，你只是一个调用接口的人，它只是比低代码平台高级和智能里许多倍。但是不知道为什么，程序员可能对于低代码，是有一些敌意的。而且对于大模型，我感觉一样也让人感到不安。程序员到底应该是什么样的？我们的未来，是否依然需要”写代码“。我们的未来，是否终究被困于”业务“？</p>
+<p><strong>大模型的一些术语:</strong></p>
+<ol>
+<li>
+<p>大模型：一般指1亿以上参数的模型，但是这个标准一直在升级，目前万亿参数以上的模型也有了。大语言模型（Large Language Model，LLM）是针对语言的大模型。</p>
+</li>
+<li>
+<p>175B、60B、540B等：这些一般指参数的个数，B是Billion/十亿的意思，175B是1750亿参数，这是ChatGPT大约的参数规模。</p>
+</li>
+<li>
+<p>强化学习：（Reinforcement Learning）一种机器学习的方法，通过从外部获得激励来校正学习方向从而获得一种自适应的学习能力。</p>
+</li>
+<li>
+<p>基于人工反馈的强化学习（RLHF）：（Reinforcement Learning from Human Feedback）构建人类反馈数据集，训练一个激励模型，模仿人类偏好对结果打分，这是GPT-3后时代大语言模型越来越像人类对话核心技术。</p>
+</li>
+<li>
+<p>涌现：（Emergence）或称创发、突现、呈展、演生，是一种现象。许多小实体相互作用后产生了大实体，而这个大实体展现了组成它的小实体所不具有的特性。研究发现，模型规模达到一定阈值以上后，会在多步算术、大学考试、单词释义等场景的准确性显著提升，称为涌现。</p>
+</li>
+<li>
+<p>泛化：（Generalization）模型泛化是指一些模型可以应用（泛化）到其他场景，通常为采用迁移学习、微调等手段实现泛化。</p>
+</li>
+<li>
+<p>微调：（FineTuning）针对大量数据训练出来的预训练模型，后期采用业务相关数据进一步训练原先模型的相关部分，得到准确度更高的模型，或者更好的泛化。</p>
+</li>
+<li>
+<p>指令微调：（Instruction FineTuning），针对已经存在的预训练模型，给出额外的指令或者标注数据集来提升模型的性能。</p>
+</li>
+<li>
+<p>思维链：（Chain-of-Thought，CoT）。通过让大语言模型（LLM）将一个问题拆解为多个步骤，一步一步分析，逐步得出正确答案。需指出，针对复杂问题，LLM直接给出错误答案的概率比较高。思维链可以看成是一种指令微调。</p>
+</li>
+</ol>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Hello World]]></title>
+        <id>https://youxiangyang.github.io/mypages.github.io/post/hello-gridea/</id>
+        <link href="https://youxiangyang.github.io/mypages.github.io/post/hello-gridea/">
+        </link>
+        <updated>2018-12-11T16:00:00.000Z</updated>
+        <content type="html"><![CDATA[<p>重启11月~</p>
+]]></content>
+    </entry>
+</feed>
