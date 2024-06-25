@@ -1,0 +1,311 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>关于Jinja2模板使用 | Yang</title>
+<link rel="shortcut icon" href="https://youxiangyang.github.io/mypages.github.io//favicon.ico?v=1719323284591">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://youxiangyang.github.io/mypages.github.io//styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="关于Jinja2模板使用 | Yang - Atom Feed" href="https://youxiangyang.github.io/mypages.github.io//atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="Jinja2 是一个现代的、设计友好的模板语言，用于 Python，它允许你在 HTML、XML 或其他文本格式中嵌入 Python 代码
+
+在Jinja2中，可以使用字符串作为模板源而非文件路径。这可以通过创建一个Template对象并直..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://youxiangyang.github.io/mypages.github.io/">
+  <img class="avatar" src="https://youxiangyang.github.io/mypages.github.io//images/avatar.png?v=1719323284591" alt="">
+  </a>
+  <h1 class="site-title">
+    Yang
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="https://youxiangyang.github.io/mypages.github.io/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://youxiangyang.github.io/mypages.github.io/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://youxiangyang.github.io/mypages.github.io/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://youxiangyang.github.io/mypages.github.io/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              关于Jinja2模板使用
+            </h2>
+            <div class="post-info">
+              <span>
+                2024-06-25
+              </span>
+              <span>
+                5 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <p>Jinja2 是一个现代的、设计友好的模板语言，用于 Python，它允许你在 HTML、XML 或其他文本格式中嵌入 Python 代码</p>
+<!-- more -->
+<p>在Jinja2中，可以使用字符串作为模板源而非文件路径。这可以通过创建一个<code>Template</code>对象并直接传入模板字符串来实现。下面是一个简单的例子说明如何做到这一点：</p>
+<p>首先，确保已经安装了Jinja2库。如果还没有安装，可以通过pip安装：</p>
+<pre><code class="language-bash">pip install jinja2
+</code></pre>
+<p>然后，可以按照下面的方式使用字符串模板：</p>
+<pre><code class="language-python">from jinja2 import Template
+
+# 定义你的模板字符串
+template_string = &quot;&quot;&quot;
+Hello {{ name }},
+This is an example of using a Jinja2 template from a string.
+Today's date is {{ today_date }}.
+&quot;&quot;&quot;
+
+# 创建一个Template对象，传入模板字符串
+template = Template(template_string)
+
+# 定义渲染模板所需的数据字典
+data = {
+    'name': 'John Doe',
+    'today_date': '2023-04-01'
+}
+
+# 渲染模板
+output = template.render(data)
+
+print(output)
+</code></pre>
+<p>在这个例子中，<code>template_string</code>变量包含了模板的定义，其中<code>{{ name }}</code>和<code>{{ today_date }}</code>是待替换的变量。我们通过<code>Template(template_string)</code>创建了一个模板对象，然后使用<code>render(data)</code>方法传入数据字典来渲染模板，最终得到渲染后的字符串输出。</p>
+<h2 id="使用本地文件作为模板进行渲染">使用本地文件作为模板进行渲染</h2>
+<p>下面是一个简单的例子</p>
+<pre><code class="language-python">from jinja2 import Environment, FileSystemLoader
+
+# 设置模板文件所在的目录
+template_dir = 'templates'
+# 创建Jinja2环境对象
+env = Environment(loader=FileSystemLoader(template_dir))
+# 选择模板文件
+template = env.get_template('my_template.jinja')
+# 准备数据
+context = {'title': 'Jinja2 Template', 'content': 'Hello, Jinja2!}
+# 渲染模板
+rendered_template = template.render(context)
+# 输出渲染后的内容
+print(rendered_template)
+# 保存到文件
+with open('output.html', 'w') as f:
+    f.write(rendered_template)
+</code></pre>
+<p>模板文件:</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;{{ title }}&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;{{ title }}&lt;/h1&gt;
+    &lt;div&gt;{{ content }}&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<h2 id="模板语法">模板语法</h2>
+<p>Jinja2 是一个现代的、设计友好的模板语言，用于 Python，它允许你在 HTML、XML 或其他文本格式中嵌入 Python 代码。以下是一些 Jinja2 的主要模板语法要点：</p>
+<ol>
+<li><strong>变量</strong>：
+<ul>
+<li>使用 <code>{{ variable }}</code> 语法来输出变量的值。</li>
+<li>变量可以是一个字符串、数字、列表、字典或任何 Python 对象。</li>
+</ul>
+</li>
+<li><strong>注释</strong>：
+<ul>
+<li>使用 <code>{# ... #}</code> 来包含注释，这些注释不会在渲染的输出中出现。</li>
+</ul>
+</li>
+<li><strong>控制结构</strong>：
+<ul>
+<li><code>for</code> 循环：使用 <code>{% for item in sequence %}...{% endfor %}</code> 来循环遍历序列。</li>
+<li><code>if</code> 语句：使用 <code>{% if condition %}...{% elif condition %}...{% else %}...{% endif %}</code> 来进行条件判断。</li>
+<li><code>macro</code>：使用 <code>{% macro name(parameters) %}...{% endmacro %}</code> 来定义宏，可以在模板中重用代码块。</li>
+<li><code>call</code>：使用 <code>{% call macro() %}...{% endcall %}</code> 来调用宏。</li>
+</ul>
+</li>
+<li><strong>过滤器</strong>：
+<ul>
+<li>使用 <code>{{ variable | filter }}</code> 语法来对变量应用过滤器，以转换输出。</li>
+<li>例如，<code>{{ name | upper }}</code> 将变量 <code>name</code> 的值转换为大写。</li>
+</ul>
+</li>
+<li><strong>继承</strong>：
+<ul>
+<li>使用 <code>{% extends &quot;base.html&quot; %}</code> 来继承另一个模板。</li>
+<li>使用 <code>{% block name %}...{% endblock %}</code> 来定义在子模板中可以覆盖的块。</li>
+</ul>
+</li>
+<li><strong>包含</strong>：
+<ul>
+<li>使用 <code>{% include &quot;fragment.html&quot; %}</code> 来包含另一个模板文件的内容。</li>
+</ul>
+</li>
+<li><strong>静态文件</strong>：
+<ul>
+<li>使用 <code>{% static &quot;file.path&quot; %}</code> 来引用静态文件，如 CSS 或 JavaScript 文件。</li>
+</ul>
+</li>
+<li><strong>循环中的特殊变量</strong>：
+<ul>
+<li><code>loop.index</code>：当前迭代的索引（从 1 开始）。</li>
+<li><code>loop.index0</code>：当前迭代的索引（从 0 开始）。</li>
+<li><code>loop.revindex</code>：到循环结束的迭代次数（从 1 开始）。</li>
+<li><code>loop.revindex0</code>：到循环结束的迭代次数（从 0 开始）。</li>
+<li><code>loop.first</code>：如果是第一次迭代，则为 True。</li>
+<li><code>loop.last</code>：如果是最后一次迭代，则为 True。</li>
+</ul>
+</li>
+<li><strong>空白控制</strong>：
+<ul>
+<li>使用 <code>-</code> 符号紧跟 <code>{%</code> 或 <code>%}</code> 来消除标签周围的空白。</li>
+<li>例如，<code>{% for item in seq -%}</code> 和 <code>{%- endfor %}</code> 将不会在输出中产生额外的空白行。</li>
+</ul>
+</li>
+<li><strong>转义</strong>：
+<ul>
+<li>使用 <code>{% raw %}...{% endraw %}</code> 来禁用内嵌代码的转义。</li>
+</ul>
+</li>
+<li><strong>测试</strong>：
+<ul>
+<li>使用 <code>{{ variable is test }}</code> 语法来进行测试，例如 <code>{{ name is defined }}</code> 检查变量是否已定义。</li>
+</ul>
+</li>
+<li><strong>全局变量</strong>：
+<ul>
+<li>Jinja2 提供了一些全局变量，如 <code>request</code>、<code>session</code> 等，取决于应用程序是如何配置的。</li>
+</ul>
+</li>
+<li><strong>自定义过滤器、测试和全局函数</strong>：
+<ul>
+<li>可以在 Jinja2 环境中注册自定义的过滤器、测试和全局函数，以便在模板中使用。<br>
+这些是 Jinja2 模板语言的一些基本语法和功能。Jinja2 的强大之处在于它的灵活性和易于扩展性，允许开发者根据自己的需求定制模板的功能。</li>
+</ul>
+</li>
+</ol>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E4%BD%BF%E7%94%A8%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E4%BD%9C%E4%B8%BA%E6%A8%A1%E6%9D%BF%E8%BF%9B%E8%A1%8C%E6%B8%B2%E6%9F%93">使用本地文件作为模板进行渲染</a></li>
+<li><a href="#%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95">模板语法</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://youxiangyang.github.io/mypages.github.io//atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
