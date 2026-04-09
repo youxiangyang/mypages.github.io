@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高强度密码生成器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #444;
+            font-weight: 600;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .password-display {
+            position: relative;
+            margin: 25px 0;
+        }
+        
+        .password-input {
+            padding-right: 100px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            letter-spacing: 1px;
+            background: #f8f9fa;
+        }
+        
+        .strength-meter {
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease, background-color 0.3s;
+            border-radius: 3px;
+        }
+        
+        .strength-text {
+            font-size: 14px;
+            margin-top: 5px;
+            font-weight: 600;
+        }
+        
+        .strength-weak { color: #ff4757; }
+        .strength-medium { color: #ffa502; }
+        .strength-strong { color: #2ed573; }
+        .strength-very-strong { color: #1e90ff; }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-generate {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-copy {
+            background: #2ed573;
+            color: white;
+        }
+        
+        .btn-copy:hover {
+            background: #25c464;
+        }
+        
+        .btn-copy:active {
+            transform: scale(0.98);
+        }
+        
+        .btn-save {
+            background: #1e90ff;
+            color: white;
+        }
+        
+        .btn-save:hover {
+            background: #1c86ee;
+        }
+        
+        .copy-notice {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #2ed573;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .copy-notice.show {
+            opacity: 1;
+        }
+        
+        .features {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .feature-item i {
+            color: #667eea;
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        .password-history {
+            margin-top: 20px;
+        }
+        
+        .history-item {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .history-time {
+            font-size: 12px;
+            color: #888;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 高强度密码生成器</h1>
+            <p>基于记忆词和区别词生成安全密码</p>
+        </div>
+        
+        <div class="form-group">
+            <label for="memory-word">记忆名词</label>
+            <input type="text" id="memory-word" placeholder="例如: dragon" value="dragon">
+        </div>
+        
+        <div class="form-group">
+            <label for="difference-word">区别名词</label>
+            <input type="text" id="difference-word" placeholder="例如: mountain" value="mountain">
+        </div>
+        
+        <div class="form-group">
+            <label>生成的密码</label>
+            <div class="password-display">
+                <input type="text" id="password-output" readonly class="password-input">
+                <div class="copy-notice" id="copy-notice">已复制！</div>
+            </div>
+            <div class="strength-meter">
+                <div class="strength-fill" id="strength-fill"></div>
+            </div>
+            <div class="strength-text" id="strength-text">密码强度: -</div>
+        </div>
+        
+        <div class="btn-group">
+            <button class="btn-generate" onclick="generatePassword()">生成密码</button>
+            <button class="btn-copy" onclick="copyPassword()">复制密码</button>            
+        </div>
+        
+        <div class="features">
+            <h3>✨ 功能特点</h3>
+            <div class="feature-item">✓ 避免易混淆字符 (l/I, 0/O)</div>
+            <div class="feature-item">✓ 包含大小写字母、数字、符号</div>
+            <div class="feature-item">✓ 可重复生成（相同输入产生相同密码）</div>
+            <div class="feature-item">✓ 密码强度实时评估</div>
+        </div>
+        
+         
+    </div>
+    
+    <script>
+        // 定义易区分的字符集
+        const UPPERCASE = 'ABCDEFGHJKLMNPQRSTUVWXYZ';  // 去掉了I, O
+        const LOWERCASE = 'abcdefghijkmnopqrstuvwxyz'; // 去掉了l
+        const DIGITS = '23456789';                     // 去掉了0, 1
+        const PUNCTUATIONS = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+        const ALL_CHARS = UPPERCASE + LOWERCASE + DIGITS + PUNCTUATIONS;
+        
+        // 基于记忆词和区别词生成确定性种子
+        function generateSeed(memory, difference) {
+            const combined = memory + '_' + difference;
+            let hash = 0;
+            for (let i = 0; i < combined.length; i++) {
+                hash = ((hash << 5) - hash) + combined.charCodeAt(i);
+                hash = hash & hash; // 转换为32位整数
+            }
+            return Math.abs(hash);
+        }
+        
+        // 模拟确定性随机数生成器
+        class SeededRandom {
+            constructor(seed) {
+                this.seed = seed % 2147483647;
+                if (this.seed <= 0) this.seed += 2147483646;
+            }
+            
+            next() {
+                this.seed = (this.seed * 16807) % 2147483647;
+                return (this.seed - 1) / 2147483646;
+            }
+            
+            nextInt(min, max) {
+                return Math.floor(this.next() * (max - min + 1)) + min;
+            }
+            
+            choice(chars) {
+                return chars[this.nextInt(0, chars.length - 1)];
+            }
+            
+            shuffle(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = this.nextInt(0, i);
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+        }
+        
+        // 主密码生成函数
+        function generateStrongPassword(memoryWord, differenceWord) {
+            const seed = generateSeed(memoryWord, differenceWord);
+            const random = new SeededRandom(seed);
+            
+            const passwordChars = [];
+            
+            // 确保每种字符至少有一个
+            passwordChars.push(random.choice(UPPERCASE));
+            passwordChars.push(random.choice(LOWERCASE));
+            passwordChars.push(random.choice(DIGITS));
+            passwordChars.push(random.choice(PUNCTUATIONS));
+            
+            // 目标长度12-16
+            const targetLength = random.nextInt(12, 16);
+            
+            // 填充剩余字符
+            while (passwordChars.length < targetLength) {
+                passwordChars.push(random.choice(ALL_CHARS));
+            }
+            
+            // 打乱顺序
+            random.shuffle(passwordChars);
+            
+            return passwordChars.join('');
+        }
+        
+        // 计算密码强度
+        function calculatePasswordStrength(password) {
+            let hasUpper = false;
+            let hasLower = false;
+            let hasDigit = false;
+            let hasSpecial = false;
+            
+            for (let char of password) {
+                if (UPPERCASE.includes(char)) hasUpper = true;
+                else if (LOWERCASE.includes(char)) hasLower = true;
+                else if (DIGITS.includes(char)) hasDigit = true;
+                else if (PUNCTUATIONS.includes(char)) hasSpecial = true;
+            }
+            
+            const length = password.length;
+            let score = 0;
+            
+            // 长度评分
+            if (length >= 16) score += 4;
+            else if (length >= 12) score += 3;
+            else if (length >= 8) score += 2;
+            else score += 1;
+            
+            // 字符类型评分
+            const charTypes = [hasUpper, hasLower, hasDigit, hasSpecial]
+                .filter(Boolean).length;
+            score += charTypes;
+            
+            return { score, hasUpper, hasLower, hasDigit, hasSpecial, length };
+        }
+        
+        // 获取强度等级和颜色
+        function getStrengthInfo(score) {
+            if (score >= 7) return { level: '极高', color: '#1e90ff', width: '100%' };
+            if (score >= 5) return { level: '高', color: '#2ed573', width: '80%' };
+            if (score >= 3) return { level: '中', color: '#ffa502', width: '60%' };
+            return { level: '低', color: '#ff4757', width: '40%' };
+        }
+        
+        // 生成并显示密码
+        function generatePassword() {
+            const memory = document.getElementById('memory-word').value.trim();
+            const difference = document.getElementById('difference-word').value.trim();
+            
+            if (!memory || !difference) {
+                alert('请输入记忆名词和区别名词！');
+                return;
+            }
+            
+            const password = generateStrongPassword(memory, difference);
+            const strengthInfo = calculatePasswordStrength(password);
+            const { level, color, width } = getStrengthInfo(strengthInfo.score);
+            
+            // 更新显示
+            document.getElementById('password-output').value = password;
+            document.getElementById('strength-fill').style.width = width;
+            document.getElementById('strength-fill').style.backgroundColor = color;
+            document.getElementById('strength-text').textContent = 
+                `密码强度: ${level} | 长度: ${strengthInfo.length} 字符`;
+            
+            // 保存到历史记录
+            //addToHistory(password, memory, difference, level);
+        }
+        
+        // 复制密码到剪贴板
+        function copyPassword() {
+            const passwordField = document.getElementById('password-output');
+            if (!passwordField.value) {
+                alert('请先生成密码！');
+                return;
+            }
+            
+            passwordField.select();
+            passwordField.setSelectionRange(0, 99999); // 移动设备支持
+            
+            try {
+                navigator.clipboard.writeText(passwordField.value)
+                    .then(() => {
+                        // 显示复制成功提示
+                        const notice = document.getElementById('copy-notice');
+                        notice.classList.add('show');
+                        setTimeout(() => notice.classList.remove('show'), 2000);
+                    })
+                    .catch(() => {
+                        // 降级方案
+                        document.execCommand('copy');
+                        alert('密码已复制到剪贴板！');
+                    });
+            } catch (err) {
+                // 兼容旧浏览器
+                document.execCommand('copy');
+                alert('密码已复制到剪贴板！');
+            }
+        }
+        
+         
+            
+        
+        // 绑定Enter键生成密码
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input[type="text"]');
+            inputs.forEach(input => {
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        generatePassword();
+                    }
+                });
+            });
+            
+            // 初始生成一个示例密码
+            generatePassword();
+        });
+    </script>
+</body>
+</html>
